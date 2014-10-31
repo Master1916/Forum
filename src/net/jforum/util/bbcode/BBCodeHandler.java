@@ -101,7 +101,7 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 			throw new ForumException(e);
 		}
 	}
-
+	 
 	public void addBb(BBCode bb)
 	{
 		if (bb.alwaysProcess()) {
@@ -126,7 +126,7 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	{
 		return (BBCode)this.bbMap.get(tagName);
 	}
-	
+	@Override
 	public void startElement(String uri, String localName, String tag, Attributes attrs)
 	{
 		if (tag.equals("match")) {
@@ -152,7 +152,7 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	
 		this.tagName = tag;
 	}
-
+	@Override
 	public void endElement(String uri, String localName, String tag)
 	{	
 		if (tag.equals("match")) {
@@ -169,7 +169,8 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	
 		this.tagName = "";
 	}
-
+	
+	@Override
 	public void characters(char ch[], int start, int length)
 	{
 		if (this.tagName.equals("replace") || this.tagName.equals("regex"))

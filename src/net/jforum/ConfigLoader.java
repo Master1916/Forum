@@ -73,10 +73,10 @@ import org.quartz.SchedulerException;
  * @author Rafael Steil
  * @version $Id: ConfigLoader.java,v 1.30 2007/07/27 15:42:56 rafaelsteil Exp $
  */
-public class ConfigLoader 
+public class ConfigLoader
 {
 	private static final Logger logger = Logger.getLogger(ConfigLoader.class);
-	private static CacheEngine cache;
+	private static CacheEngine cache;// 缓存实现类
 	
 	/**
 	 * Start ( or restart ) <code>SystemGlobals</code>.
@@ -85,10 +85,14 @@ public class ConfigLoader
 	 * and database specific stuff.
 	 * 
 	 * @param appPath The application root's directory
+	 * 
+	 * 
+	 * 加载SystemGlobals
 	 */
 	public static void startSystemglobals(String appPath)
 	{
 		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties");
+		//添加 合并配置到     installation  properties                                  database.driver.config
 		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 		
 		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
@@ -125,6 +129,7 @@ public class ConfigLoader
 	
 	public static void createLoginAuthenticator()
 	{
+		////login.authenticator = net.jforum.sso.DefaultLoginAuthenticator
 		String className = SystemGlobals.getValue(ConfigKeys.LOGIN_AUTHENTICATOR);
 
 		try {
@@ -166,6 +171,7 @@ public class ConfigLoader
     }
 	
 	/**
+	 * 对配置文件进行监听
 	 * Listen for changes in common configuration files.
 	 * The watched files are: <i>generic_queries.sql</i>, 
 	 * <i>&lt;database_name&gt;.sql</i>, <i>SystemGlobals.properties</i>
@@ -202,10 +208,11 @@ public class ConfigLoader
 			}
 		}
 	}
-	
+	//设置driver
 	public static void loadDaoImplementation()
 	{
 		// Start the dao.driver implementation
+		//dao.driver=net.jforum.dao.mysql.MysqlDataAccessDriver 
 		String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
 
 		logger.info("Loading JDBC driver " + driver);
@@ -222,13 +229,14 @@ public class ConfigLoader
 	
 	public static void startCacheEngine()
 	{
-		try {
+		try {	//net.jforum.cache.DefaultCacheEngine												//cache.engine.implementation
 			String cacheImplementation = SystemGlobals.getValue(ConfigKeys.CACHE_IMPLEMENTATION);
 			logger.info("Using cache engine: " + cacheImplementation);
 			
+			//通过反射获得cache类
 			cache = (CacheEngine)Class.forName(cacheImplementation).newInstance();
 			cache.init();
-			
+														//cacheable.objects
 			String s = SystemGlobals.getValue(ConfigKeys.CACHEABLE_OBJECTS);
 			if (s == null || s.trim().equals("")) {
 				logger.warn("Cannot find Cacheable objects to associate the cache engine instance.");
@@ -239,7 +247,7 @@ public class ConfigLoader
 			for (int i = 0; i < cacheableObjects.length; i++) {
 				logger.info("Creating an instance of " + cacheableObjects[i]);
 				Object o = Class.forName(cacheableObjects[i].trim()).newInstance();
-				
+				// 设置Repository的cache
 				if (o instanceof Cacheable) {
 					((Cacheable)o).setCacheEngine(cache);
 				}

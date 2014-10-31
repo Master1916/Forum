@@ -78,6 +78,7 @@ public class I18n
 
 	private static Map messagesMap = new HashMap();
 
+	// 保存可以做那些国际化
 	private static Properties localeNames = new Properties();
 
 	private static String defaultName;
@@ -112,10 +113,11 @@ public class I18n
 	 */
 	public static synchronized void load()
 	{
+		//language 所在的文件夹web-inf下的config/languages/....
 		baseDir = SystemGlobals.getApplicationResourceDir() + "/" + SystemGlobals.getValue(ConfigKeys.LOCALES_DIR);
-
+		// 加载本地语言
 		loadLocales();
-
+		//     en_US                                i18n.internal = en_US
 		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN);
 		load(defaultName, null);
 
@@ -132,6 +134,7 @@ public class I18n
 		defaultName = newDefaultLanguage;
 	}
 
+	/// 初始化localeNames 
 	private static void loadLocales()
 	{
 		FileInputStream fis = null;
@@ -154,6 +157,7 @@ public class I18n
 	{
 		load(localeName, mergeWith, false);
 	}
+	//通过指定的语言加载指定语言的配置文件
 
 	static void load(String localeName, String mergeWith, boolean force)
 	{
@@ -221,11 +225,12 @@ public class I18n
 		defaultName = null;
 	}
 
+	///系统自动监视加载的语言文件如果有改变着重新加载无需重启系统
 	private static void watchForChanges(final String localeName)
-	{
+	{   // watching is list
 		if (!watching.contains(localeName)) {
 			watching.add(localeName);
-
+         
 			int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
 
 			if (fileChangesDelay > 0) {

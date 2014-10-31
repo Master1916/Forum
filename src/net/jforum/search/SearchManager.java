@@ -44,6 +44,7 @@ package net.jforum.search;
 
 import net.jforum.entities.Post;
 
+ 
 /**
  * @author Rafael Steil
  * @version $Id: SearchManager.java,v 1.7 2007/09/09 22:53:35 rafaelsteil Exp $

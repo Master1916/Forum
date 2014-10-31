@@ -81,7 +81,7 @@ public class SystemGlobals implements VariableStore
 {
 	private static SystemGlobals globals = new SystemGlobals();
 
-	private String defaultConfig;
+ 	private String defaultConfig;//配置文件路径
 	private String installationConfig;
 
 	private Properties defaults = new Properties();
@@ -125,19 +125,22 @@ public class SystemGlobals implements VariableStore
 		//把配置文件路径赋值给defaultConfig
 		this.defaultConfig = mainConfigurationFile;
 		this.defaults = new Properties();
-		//配置文件的路径放入 properties
+		//配置文件的路径放入 properties     application.path
 		this.defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
 		//配置文件的的名字和路径 放入 properties
+	//                                default.config
 		this.defaults.put(ConfigKeys.DEFAULT_CONFIG, mainConfigurationFile);
 		
-		//加载mainConfigurationFile 文件中的内容
+		//加载mainConfigurationFile 文件中的内容 带 default
 		SystemGlobals.loadDefaults();
 	
 		//查看安装配置
 		this.installation = new Properties();
-		//安装配置文件路径
+		//获取安装配置文件路径                                                                                                                   installation.config
 		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
-
+		
+		
+		//初始化 参数 installation
 		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext(); ) {
 			loadAdditionalDefaults((String)iter.next());
 		}
@@ -145,6 +148,8 @@ public class SystemGlobals implements VariableStore
 		if (new File(this.installationConfig).exists()) {
 			loadAdditionalDefaults(this.installationConfig);
 		}
+		//初始化 参数 installation   end
+		
 	}
 	
 	/**

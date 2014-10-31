@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.sql.Connection;
+import java.util.Locale;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -127,6 +128,7 @@ public class JForum extends JForumBaseServlet
 	 */
 	public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException
 	{
+		
 		Writer out = null;
 		JForumContext forumContext = null;
 		RequestContext request = null;

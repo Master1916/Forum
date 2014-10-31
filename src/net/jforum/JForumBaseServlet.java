@@ -80,15 +80,21 @@ public class JForumBaseServlet extends HttpServlet
 	protected void startApplication()
 	{
 		try {
+			//sql.queries.generic = ${config.dir}/database/generic/generic_queries.sql
 			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+			//sql.queries.driver = ${config.dir}/database/${database.driver.name}/${database.driver.name}.sql
 			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-			
+			//quartz.config = ${config.dir}/quartz-jforum.properties
 			String filename = SystemGlobals.getValue(ConfigKeys.QUARTZ_CONFIG);
+			
 			SystemGlobals.loadAdditionalDefaults(filename);
-
+			//登陆验证
 			ConfigLoader.createLoginAuthenticator();
+			//load dao 和设置driver
 			ConfigLoader.loadDaoImplementation();
+			//监听文件是否配置文件是否改变如改变重新加载
 			ConfigLoader.listenForChanges();
+			//
 			ConfigLoader.startSearchIndexer();
 			ConfigLoader.startSummaryJob();
 		}
@@ -108,8 +114,9 @@ public class JForumBaseServlet extends HttpServlet
 			DOMConfigurator.configure(appPath + "/WEB-INF/log4j.xml");
 
 			logger.info("Starting JForum. Debug mode is " + debug);
-
+			//加载配置文件
 			ConfigLoader.startSystemglobals(appPath);
+			//开启缓存
 			ConfigLoader.startCacheEngine();
 
 			// Configure the template engine
@@ -121,7 +128,7 @@ public class JForumBaseServlet extends HttpServlet
 			// Create the default template loader
 			String defaultPath = SystemGlobals.getApplicationPath() + "/templates";
 			FileTemplateLoader defaultLoader = new FileTemplateLoader(new File(defaultPath));
-
+				//获得外部freemarker 模板路径 
 			String extraTemplatePath = SystemGlobals.getValue(ConfigKeys.FREEMARKER_EXTRA_TEMPLATE_PATH);
 			
 			if (StringUtils.isNotBlank(extraTemplatePath)) {
@@ -135,7 +142,10 @@ public class JForumBaseServlet extends HttpServlet
 				// An extra template path is not configured, we only need the default loader
 				templateCfg.setTemplateLoader(defaultLoader);
 			}
-
+ 
+		 
+			//config.dir = ${application.path}/WEB-INF/config
+			// ModulesRepository.getModuleClass(ClassName);
 			ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 
 			this.loadConfigStuff();
@@ -150,14 +160,17 @@ public class JForumBaseServlet extends HttpServlet
 			throw new ForumStartupException("Error while starting JForum", e);
 		}
 	}
-
+	//加载资源
 	protected void loadConfigStuff()
 	{
+		//加载urlPattern.properities资源
 		ConfigLoader.loadUrlPatterns();
+		//加载语言配置
 		I18n.load();
+		//加载htm模板
 		Tpl.load(SystemGlobals.getValue(ConfigKeys.TEMPLATES_MAPPING));
 
-		// BB Code
+		// BB Code 
 		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
 	}
 }

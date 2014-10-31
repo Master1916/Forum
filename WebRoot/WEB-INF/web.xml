@@ -18,6 +18,8 @@
 		<url-pattern>*.page</url-pattern>
 	</filter-mapping>
     
+    
+    
     <listener>
     	<listener-class>net.jforum.ForumSessionListener</listener-class>
     </listener>
