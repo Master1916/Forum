@@ -67,21 +67,24 @@ public class WebResponseContext implements ResponseContext
 		this.response = response;
 	}
 
+	//设置头长度
 	public void setContentLength(int len)
 	{
 		response.setContentLength(len);
 	}
 
+	//判断是否设置了header
 	public boolean containsHeader(String name)
 	{
 		return response.containsHeader(name);
 	}
-
+	//设置header 报头
 	public void setHeader(String name, String value)
 	{
 		response.setHeader(name, value);
 	}
 
+	
 	public void addCookie(Cookie cookie)
 	{
 		response.addCookie(cookie);
@@ -110,6 +113,7 @@ public class WebResponseContext implements ResponseContext
 		return response.getCharacterEncoding();
 	}
 
+	//设置 相应类型 text/html 告诉浏览器向你发送的是html
 	public void setContentType(String type)
 	{
 		response.setContentType(type);
@@ -126,7 +130,9 @@ public class WebResponseContext implements ResponseContext
 	}
 
 	public String encodeURL(String url)
-	{
+	{	//response.encodeURL(url)方法是对一个url进行编码，会把session ID和cookie等需要添加的东西添加在url中
+		//如果不需要编码这原样返回
+		//例如浏览器关闭了cookie和session功能
 		return response.encodeURL(url);
 	}
 

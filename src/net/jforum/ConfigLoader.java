@@ -86,7 +86,6 @@ public class ConfigLoader
 	 * 
 	 * @param appPath The application root's directory
 	 * 
-	 * 
 	 * 加载SystemGlobals
 	 */
 	public static void startSystemglobals(String appPath)
@@ -95,9 +94,6 @@ public class ConfigLoader
 		//添加 合并配置到     installation  properties                                  database.driver.config
 		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 		
-		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
-			SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
-		}
 	}
 
 	/**
@@ -227,9 +223,13 @@ public class ConfigLoader
 		}
     }
 	
+	
+//为需要缓存的项目设置缓存策略
 	public static void startCacheEngine()
 	{
-		try {	//net.jforum.cache.DefaultCacheEngine												//cache.engine.implementation
+		try {	
+			//net.jforum.cache.DefaultCacheEngine
+			//cache.engine.implementation
 			String cacheImplementation = SystemGlobals.getValue(ConfigKeys.CACHE_IMPLEMENTATION);
 			logger.info("Using cache engine: " + cacheImplementation);
 			

@@ -6,7 +6,7 @@
 	<#if (((totalReplies + 1) % postsPerPage) > 0)>
 		<#assign totalPostPages = (totalPostPages + 1)/>
 	</#if>
-
+ 
 	<#if (totalPostPages > 6)>
 		<#assign minTotal = 3/>
 	<#else>

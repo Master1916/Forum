@@ -116,7 +116,7 @@ public class SystemGlobals implements VariableStore
 		queries.clear();
 		transientValues.clear();
 	}
-	
+	//
 	private void buildSystem(String appPath, String mainConfigurationFile)
 	{
 		if (mainConfigurationFile == null) {
@@ -125,7 +125,7 @@ public class SystemGlobals implements VariableStore
 		//把配置文件路径赋值给defaultConfig
 		this.defaultConfig = mainConfigurationFile;
 		this.defaults = new Properties();
-		//配置文件的路径放入 properties     application.path
+		//                            application.path
 		this.defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
 		//配置文件的的名字和路径 放入 properties
 	//                                default.config
@@ -136,9 +136,8 @@ public class SystemGlobals implements VariableStore
 	
 		//查看安装配置
 		this.installation = new Properties();
-		//获取安装配置文件路径                                                                                                                   installation.config
+		//获取安装配置文件路径          installation.config = ${config.dir}/jforum-custom.conf       
 		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
-		
 		
 		//初始化 参数 installation
 		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext(); ) {
@@ -165,6 +164,9 @@ public class SystemGlobals implements VariableStore
 		globals.expander.clearCache();
 	}
 	
+	
+	
+//	操作objectProperites
 	public static void setObjectValue(String field, Object value)
 	{
 		globals.objectProperties.put(field, value);
@@ -175,6 +177,9 @@ public class SystemGlobals implements VariableStore
 		return globals.objectProperties.get(field);
 	}
 
+	
+	
+	
 	/**
 	 * Set a transient configuration value (a value that will not be saved) 
 	 * @param field The name of the configuration option
@@ -303,6 +308,8 @@ public class SystemGlobals implements VariableStore
 	/**
 	 * Retrieve an boolean-values configuration field
 	 * 
+	 * 检索一个属性的值是不是true
+	 * 
 	 * @param field name of the configuration option
 	 * @return The value of the configuration option
 	 * @exception NullPointerException when the field does not exists
@@ -313,11 +320,13 @@ public class SystemGlobals implements VariableStore
 	}
 
 	/**
-	 * Return the value of a configuration value as a variable. Variable expansion is performe
-	 * on the result.
+	 * Return the value of a configuration value as a variable. 
+	 * Variable expansion is performe on the result.
 	 * 
 	 * @param field The field name to retrieve
 	 * @return The value of the field if present or null if not  
+	 * 
+	 * 获取值从  defaults 和 installation中
 	 */
 
 	public String getVariableValue(String field)
@@ -359,20 +368,15 @@ public class SystemGlobals implements VariableStore
 
 	/**
 	 * Gets the path to the resource's directory.
-	 * This method returns the directory name where the config
-	 * files are stored. 
+	 * This method returns the directory name where the config files are stored. 
 	 *  Caso queira saber o caminho absoluto do diretorio, voce precisa
 	 * usar
-	 * Note that this method does not return the complete path. If you 
-	 * want the full path, you must use 
-	 * <blockquote><pre>SystemGlobals.getApplicationPath() + SystemGlobals.getApplicationResourcedir()</pre></blockquote>
-	 * 
 	 * @return String with the name of the resource dir, relative 
 	 * to application's root dir.
 	 * @see #getApplicationPath()
 	 * */
 	public static String getApplicationResourceDir()
-	{
+	{   //resource.dir = ${application.path}/WEB-INF
 		return getValue(ConfigKeys.RESOURCE_DIR);
 	}
 

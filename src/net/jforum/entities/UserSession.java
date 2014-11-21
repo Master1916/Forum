@@ -261,11 +261,12 @@ public class UserSession implements Serializable
 
 	/**
 	 * Gets the username
-	 * 
+	 * 如果没有登录这返回
 	 * @return The username
 	 */
 	public String getUsername()
 	{
+		//SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)=1
 		if (this.username == null && this.userId == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 			this.username = I18n.getMessage("Guest");
 		}
@@ -464,3 +465,4 @@ public class UserSession implements Serializable
 		return this.sessionId.hashCode();
 	}
 }
+

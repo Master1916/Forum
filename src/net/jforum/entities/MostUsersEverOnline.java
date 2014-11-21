@@ -50,6 +50,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
+ * 最多在线人数
  * @author Rafael Steil
  * @version $Id: MostUsersEverOnline.java,v 1.5 2006/08/23 02:13:46 rafaelsteil Exp $
  */

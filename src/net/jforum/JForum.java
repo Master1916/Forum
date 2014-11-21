@@ -110,8 +110,11 @@ public class JForum extends JForumBaseServlet
 		 
 			// Init general forum stuff
 			ForumStartup.startForumRepository();
+			
 			RankingRepository.loadRanks();
+			//加载表情符号
 			SmiliesRepository.loadSmilies();
+			
 			BanlistRepository.loadBanlist();
 		}
 		catch (Throwable e) {
@@ -141,9 +144,9 @@ public class JForum extends JForumBaseServlet
 
 			request = new WebRequestContext(req);
             response = new WebResponseContext(res);
-
+            //检查数据连接
 			this.checkDatabaseStatus();
-
+               //  getContextPath()=/jforum
             forumContext = new JForumContext(request.getContextPath(),
                 SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
                 request,
@@ -159,47 +162,48 @@ public class JForum extends JForumBaseServlet
 			
 			ControllerUtils utils = new ControllerUtils();
 			utils.refreshSession();
+			//是否登录了
+			Boolean flag=SessionFacade.isLogged();
+			context.put("logged", flag);
 			
-			context.put("logged", SessionFacade.isLogged());
-			
-			// Process security data
+			// Process security data  ？？
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
-
+			//为模板准备数据
 			utils.prepareTemplateContext(context, forumContext);
 
 			String module = request.getModule();
 			
-			// Gets the module class name
-			String moduleClass = module != null 
-				? ModulesRepository.getModuleClass(module) 
-				: null;
+			// Gets the module class name 每个模块对应一个action处理事务
+			String moduleClass = module != null ? ModulesRepository.getModuleClass(module) : null;
 			
 			if (moduleClass == null) {
 				// Module not found, send 404 not found response
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
 			else {
-				boolean shouldBan = this.shouldBan(request.getRemoteAddr());
+				//判断是否被封锁的账号
+				String Ipaddress=request.getRemoteAddr();
+				boolean shouldBan = this.shouldBan(Ipaddress);
 				
 				if (!shouldBan) {
+					String action=request.getAction();
 					context.put("moduleName", module);
-					context.put("action", request.getAction());
-				}
-				else {
+					context.put("action", action);
+				}else {
 					moduleClass = ModulesRepository.getModuleClass("forums");
 					context.put("moduleName", "forums");
 					((WebRequestContext)request).changeAction("banned");
 				}
 				
+				
+				
 				if (shouldBan && SystemGlobals.getBoolValue(ConfigKeys.BANLIST_SEND_403FORBIDDEN)) {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				}
-				else {
+				}else {
 					context.put("language", I18n.getUserLanguage());
 					context.put("session", SessionFacade.getUserSession());
 					context.put("request", req);
 					context.put("response", response);
-					
 					out = this.processCommand(out, request, response, encoding, context, moduleClass);
 				}
 			}
@@ -211,11 +215,13 @@ public class JForum extends JForumBaseServlet
 			this.handleFinally(out, forumContext, response);
 		}		
 	}
-
 	private Writer processCommand(Writer out, RequestContext request, ResponseContext response, 
 			String encoding, SimpleHash context, String moduleClass) throws Exception
 	{
+		
+		
 		// Here we go, baby
+		//根据这个类的名称通过反射获得这个类的一个实例
 		Command c = this.retrieveCommand(moduleClass);
 		Template template = c.process(request, response, context);
 
@@ -289,17 +295,18 @@ public class JForum extends JForumBaseServlet
 			}
 		}
 	}
-	
+	//判断是否是被封锁这个账号 
+	//首先根据ip 把userId取到 生产一个banlist 然后和被封锁的所有账号匹配如果判断是被封锁的返回true
 	private boolean shouldBan(String ip)
-	{
+	{   //构建一个Banlist对象
 		Banlist b = new Banlist();
-		
 		b.setUserId(SessionFacade.getUserSession().getUserId());
 		b.setIp(ip);
 		
 		return BanlistRepository.shouldBan(b);
 	}
 
+	
 	private Command retrieveCommand(String moduleClass) throws Exception
 	{
 		return (Command)Class.forName(moduleClass).newInstance();

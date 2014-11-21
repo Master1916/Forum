@@ -742,6 +742,7 @@ public class ForumRepository implements Cacheable
      */
 	private void loadForums(ForumDAO fm)
 	{
+		//获得所有forum
 		List l = fm.selectAll();
 		
 		Map m = (Map)cache.get(FQN, RELATION);
@@ -795,9 +796,11 @@ public class ForumRepository implements Cacheable
      */
 	private void loadCategories(CategoryDAO cm)
 	{
+		//获得所有分类
 		List categories = cm.selectAll();
+		//声明一个treeset并且设置一个排序规则
 		Set categoriesSet = new TreeSet(new CategoryOrderComparator());
-		
+		//
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
 			

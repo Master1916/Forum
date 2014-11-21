@@ -70,15 +70,18 @@ public class JForumExecutionContext
 {
     private static ThreadLocal userData = new ThreadLocal();
 	private static Logger logger = Logger.getLogger(JForumExecutionContext.class);
+	//freemarker 
 	private static Configuration templateConfig;
+	private SimpleHash context = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
 	
 	private Connection conn;
     private ForumContext forumContext;
-    //freemarker 类
-    private SimpleHash context = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
+     
+ 
     private String redirectTo;
     private String contentType;
     private boolean isCustomContent;
+    
     private boolean enableRollback;
 	
 	/**
@@ -151,7 +154,11 @@ public class JForumExecutionContext
 	{
 		return getConnection(true);
 	}
-	
+
+	/**
+	 * @param validate 判断是否存在comm 如果true 表示没有comm需要在获得 如果 false则表示存在程序直接返回
+	 * @return 
+	 */
 	public static Connection getConnection(boolean validate)
 	{
 		JForumExecutionContext ex = get();
@@ -180,6 +187,8 @@ public class JForumExecutionContext
     }
 
     public void setForumContext(ForumContext forumContext)
+    
+    
     {
         this.forumContext = forumContext;
     }

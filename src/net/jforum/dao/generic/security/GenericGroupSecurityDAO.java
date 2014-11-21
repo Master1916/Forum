@@ -299,7 +299,7 @@ public class GenericGroupSecurityDAO extends AutoKeys implements GroupSecurityDA
 		for (Iterator iter = groups.iterator(); iter.hasNext();) {
 			groupsIds[i++] = ((Group)iter.next()).getId();
 		}
-
+		//∂‘groupsIds ≈≈–Ú
 		Arrays.sort(groupsIds);
 
 		return groupsIds;

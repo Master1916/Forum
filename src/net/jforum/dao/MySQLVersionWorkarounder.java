@@ -74,7 +74,7 @@ public class MySQLVersionWorkarounder
 			logger.warn("Cannot work with a null connection");
 			return;
     	}
-    	
+    	//	自修复mysql数据库链接
     	if (!"mysql".equals(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_NAME))) {
     		return;
     	}

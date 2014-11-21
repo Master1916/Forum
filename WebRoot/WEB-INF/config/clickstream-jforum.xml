@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <clickstream>
     <bot-host name="inktomi.com"/>
     <bot-host name="inktomisearch.com"/>

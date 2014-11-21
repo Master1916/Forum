@@ -59,7 +59,7 @@ import com.mchange.v2.c3p0.DataSources;
 public class C3P0PooledConnection extends DBConnection
 {
 	private ComboPooledDataSource ds;
-	
+
 	/**
 	 * 
 	 * @see net.jforum.DBConnection#init()
@@ -79,6 +79,9 @@ public class C3P0PooledConnection extends DBConnection
 	
 	private void extraParams()
 	{
+		//checkoutTimeout=120000;
+		//debugUnreturnedConnectionStackTraces=false;
+		//unreturnedConnectionTimeout=180
 		String extra = SystemGlobals.getValue(ConfigKeys.C3P0_EXTRA_PARAMS);
 		
 		if (extra != null && extra.trim().length() > 0) {

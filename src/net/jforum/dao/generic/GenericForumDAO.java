@@ -148,6 +148,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	}
 
 	/**
+	 * 加载每个主题中的类别
 	 * @see net.jforum.dao.ForumDAO#selectAll()
 	 */
 	public List selectAll()

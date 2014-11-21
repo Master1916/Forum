@@ -93,6 +93,7 @@ public class ForumStartup
 	public static void startForumRepository()
 	{
 		try {
+			///获得对象
 			ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 			CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
 			ConfigDAO configModel = DataAccessDriver.getInstance().newConfigDAO();

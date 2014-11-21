@@ -93,7 +93,7 @@ public class JForumContext implements ForumContext
 	{
 		return this.encodeURL(url, servletExtension);
 	}
-
+    //¥¶¿ÌURL
 	public String encodeURL(String url, String extension)
 	{
 		String ucomplete = contextPath + url + extension;

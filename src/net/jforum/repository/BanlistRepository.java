@@ -54,6 +54,10 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Banlist;
 
 /**
+ * 
+ * 
+ * 存放被论坛封锁的账号
+ * 被封锁的账号不能登录论坛
  * @author Rafael Steil
  * @version $Id: BanlistRepository.java,v 1.2 2006/12/11 00:44:50 rafaelsteil Exp $
  */
@@ -70,7 +74,7 @@ public class BanlistRepository implements Cacheable
 	{
 		cache = engine;
 	}
-	
+	//判断是否包含这个banlist 如果包含这个banlist 返回true
 	public static boolean shouldBan(Banlist b) {
 		boolean status = false;
 		

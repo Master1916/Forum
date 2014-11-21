@@ -118,17 +118,21 @@ public class ControllerUtils
 	 * @throws DatabaseException
 	 */
 	protected boolean checkAutoLogin(UserSession userSession)
-	{
+	{// COOKIE_NAME_DATA==jforumUserId
 		String cookieName = SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA);
 
 		Cookie cookie = this.getCookieTemplate(cookieName);
+		//COOKIE_USER_HASH==jforumUserHash
 		Cookie hashCookie = this.getCookieTemplate(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH));
+		//COOKIE_AUTO_LOGIN==jforumAutoLogin
 		Cookie autoLoginCookie = this.getCookieTemplate(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
 
-		if (hashCookie != null && cookie != null
+		if (    hashCookie != null 
+				&& cookie != null
 				&& !cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))
 				&& autoLoginCookie != null 
 				&& "1".equals(autoLoginCookie.getValue())) {
+			
 			String uid = cookie.getValue();
 			String uidHash = hashCookie.getValue();
 
@@ -140,7 +144,7 @@ public class ControllerUtils
 				if (userHash == null || userHash.trim().length() == 0) {
 					return false;
 				}
-				
+				//对userHash进行
 				String securityHash = MD5.crypt(userHash);
 	
 				if (securityHash.equals(uidHash)) {
@@ -177,12 +181,14 @@ public class ControllerUtils
 	 */
 	protected void configureUserSession(UserSession userSession, User user)
 	{
+		//把user的一些属性值付给userSession
 		userSession.dataToUser(user);
 
 		// As an user may come back to the forum before its
 		// last visit's session expires, we should check for
 		// existent user information and then, if found, store
 		// it to the database before getting his information back.
+		//查看是否已经登录并且session没有过期如果没有过期返回sessionId
 		String sessionId = SessionFacade.isUserInSession(user.getId());
 
 		UserSession tmpUs;

@@ -90,17 +90,22 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		super(superRequest);
 
 		this.query = new HashMap();
+		//判断是否有附件
 		boolean isMultipart = false;
 		
 		String requestType = superRequest.getMethod().toUpperCase();
+		///   /Jforum2.1.9
 		String contextPath = superRequest.getContextPath();
+		
 		String requestUri = this.extractRequestUri(superRequest.getRequestURI(), contextPath);
+		
+		
 		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 		String servletExtension = SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		
 		boolean isPost = "POST".equals(requestType);
 		boolean isGet = !isPost;
-		
+		//获得url中？后面传递的参数的一个字符串形式
 		boolean isQueryStringEmpty = (superRequest.getQueryString() == null 
 			|| superRequest.getQueryString().length() == 0);
 		
@@ -110,13 +115,14 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		}
 		else if (isPost) {
 			isMultipart = ServletFileUpload.isMultipartContent(new ServletRequestContext(superRequest));
-			
 			if (isMultipart) {
 			    this.handleMultipart(superRequest, encoding);
 			}
 		}
 		
 		if (!isMultipart) {
+			///判断是是不是ajax请求
+			/// x-requested-with  XMLHttpRequest  //表明是AJax异步
 			boolean isAjax = "XMLHttpRequest".equals(superRequest.getHeader("X-Requested-With"));
 			
 			if (!isAjax) {
@@ -148,6 +154,7 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 					this.addParameter(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
 				}
 			}
+			
 			
 			if (this.getModule() == null && this.getAction() == null) {
 				int index = requestUri.indexOf('?');
@@ -184,14 +191,18 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 				.append(urlModel[actionIndex])
 				.append('.')
 				.append(urlModel.length - baseLen);
-			
-			url = UrlPatternCollection.findPattern(sb.toString());
+			String tempPattern=sb.toString();
+			url = UrlPatternCollection.findPattern(tempPattern);
 		}
+		
+		
 
 		if (url != null) {
 			if (url.getSize() >= urlModel.length - baseLen) {
 				for (int i = 0; i < url.getSize(); i++) {
-					this.addParameter(url.getVars()[i], urlModel[i + baseLen]);
+					String var=url.getVars()[i];
+					String model=urlModel[i + baseLen];
+					this.addParameter(var, model);
 				}
 			}
 			
@@ -479,6 +490,7 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 	
 	/**
 	 * @see javax.servlet.ServletRequestWrapper#getRemoteAddr()
+	 * 
 	 */
 	public String getRemoteAddr()
 	{

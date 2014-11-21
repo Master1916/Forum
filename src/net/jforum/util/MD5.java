@@ -76,6 +76,8 @@ public class MD5
 			byte[] hash = md.digest();
 			
 			for (int i = 0; i < hash.length; i++) {
+				//0xff 是16进制 换算成十进制 15*16^1 + 15*16^0=255  二进制为  11111111 
+				//0x10  1*16^1+0*16^0=16
 				if ((0xff & hash[i]) < 0x10) {
 					hexString.append("0" + Integer.toHexString((0xFF & hash[i])));
 				}				

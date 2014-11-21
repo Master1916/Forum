@@ -52,6 +52,7 @@ package net.jforum.entities;
  */
 public class Group 
 {
+ 
 	private int id;
 	private int parentId;
 	private String name;

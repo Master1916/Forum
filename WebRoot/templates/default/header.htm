@@ -1,9 +1,13 @@
+
+<#--setting 可以设置一些配置 在后台的config中设置会被覆盖-->
 <#setting number_format = "#"/>
 <#setting datetime_format = dateTimeFormat/>
+
+<#-- 设置一些值得默认值 如果用户没有设置将使用这些值-->
 <#assign logged = logged?default(false)/>
 <#assign language = language?default("en_US")/>
 <#assign hasCodeBlock = hasCodeBlock?default(false)/>
-<html>
+<!DOCTYPE html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -35,9 +39,7 @@ Modifications by JForum Team
 				<tr>
 					<td>
 						&nbsp;
-						<!--
 						<a href="${homepageLink}"><img src="${contextPath}/templates/${templateName}/images/logo.jpg"  vspace="1" border="0" alt="[Logo]" /></a>
-						-->
 					</td>
 					 
 					<td width="100%" align="center" valign="middle">
@@ -83,7 +85,7 @@ Modifications by JForum Team
 									</#if>
 	
 									<#if !logged && !sso>
-										<a id="register" class="mainmenu" href="${JForumContext.encodeURL("/user/insert")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_register.gif" border="0" alt="[Register]" /> ${I18n.getMessage("ForumBase.register")}</a>&nbsp;/&nbsp;</span>
+										<a id="register" class="mainmenu" href="${JForumContext.encodeURL("/user/insert")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_register.gif" border="0" alt="[Register]" /> ${I18n.getMessage("ForumBase.register")}</a>&nbsp;&nbsp;</span>
 										<a id="login" class="mainmenu" href="${JForumContext.encodeURL("/user/login")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" border="0" alt="[Login]" /> ${I18n.getMessage("ForumBase.login")}</a>&nbsp; </span>
 									</#if>
 
@@ -97,5 +99,5 @@ Modifications by JForum Team
 		</td>
 	</tr>
 	<tr>
-		<td>
+<td>
 

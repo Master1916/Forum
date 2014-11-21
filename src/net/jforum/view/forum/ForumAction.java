@@ -83,13 +83,17 @@ public class ForumAction extends Command
 	public void list()
 	{
 		this.setTemplateName(TemplateKeys.FORUMS_LIST);
-
+		//根据用户获得所有的分类
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(true));
+		
+		
+		
 		this.context.put("topicsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 
 		this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
 		this.context.put("totalRegisteredUsers", ForumRepository .totalUsers());
+		
 		this.context.put("lastUser", ForumRepository.lastRegisteredUser());
 
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
@@ -127,9 +131,11 @@ public class ForumAction extends Command
 
 			onlineUsersList.add(us);
 		}
-
+        //获得注册用户数量
 		int registeredSize = SessionFacade.registeredSize();
+		//获得游客数量
 		int anonymousSize = SessionFacade.anonymousSize();
+		//总人数
 		int totalOnlineUsers = registeredSize + anonymousSize;
 
 		this.context.put("userSessions", onlineUsersList);

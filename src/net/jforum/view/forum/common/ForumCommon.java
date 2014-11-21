@@ -122,6 +122,7 @@ public class ForumCommon
 		}
 
         // Do not check for unread posts if the user is not logged in
+		//如果这个用户没有登录则不检查没有阅读的帖子
 		checkUnreadPosts = checkUnreadPosts && (userId != anonymousUserId);
 
 		List categories = ForumRepository.getAllCategories(userId);

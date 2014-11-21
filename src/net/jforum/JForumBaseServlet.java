@@ -88,7 +88,7 @@ public class JForumBaseServlet extends HttpServlet
 			String filename = SystemGlobals.getValue(ConfigKeys.QUARTZ_CONFIG);
 			
 			SystemGlobals.loadAdditionalDefaults(filename);
-			//登陆验证
+			//获取登陆需要验证的信息
 			ConfigLoader.createLoginAuthenticator();
 			//load dao 和设置driver
 			ConfigLoader.loadDaoImplementation();
@@ -108,6 +108,7 @@ public class JForumBaseServlet extends HttpServlet
 		super.init(config);
 
 		try {
+			//获得项目的根目录
 			String appPath = config.getServletContext().getRealPath("");
 			debug = "true".equals(config.getInitParameter("development"));
 			//加载logger配置文件
@@ -119,21 +120,28 @@ public class JForumBaseServlet extends HttpServlet
 			//开启缓存
 			ConfigLoader.startCacheEngine();
 
+			
+			
 			// Configure the template engine
+			//configuration是可以缓存模板的 clearTemplateCache()方法可以释放缓存的模板数据
 			Configuration templateCfg = new Configuration();
+			//配置模板检查更新时间为2秒
 			templateCfg.setTemplateUpdateDelay(2);
+			//设置数字格式化的样式
 			templateCfg.setSetting("number_format", "#");
+			//设置共享变量所有的模板都可以使用这个参数
 			templateCfg.setSharedVariable("startupTime", new Long(new Date().getTime()));
-
 			// Create the default template loader
 			String defaultPath = SystemGlobals.getApplicationPath() + "/templates";
+			//文件加载的位置
 			FileTemplateLoader defaultLoader = new FileTemplateLoader(new File(defaultPath));
-				//获得外部freemarker 模板路径 
+			//获得外部freemarker 模板路径 
 			String extraTemplatePath = SystemGlobals.getValue(ConfigKeys.FREEMARKER_EXTRA_TEMPLATE_PATH);
-			
+			//如果存在用户之定义的模板则执行下面的if
 			if (StringUtils.isNotBlank(extraTemplatePath)) {
 				// An extra template path is configured, we need a MultiTemplateLoader
 				FileTemplateLoader extraLoader = new FileTemplateLoader(new File(extraTemplatePath));
+				//在需要加载多个位置的freemarker的模板时要使用TemplateLoader进行一个整合 并且使用MultiTemplateLoader进行加载
 				TemplateLoader[] loaders = new TemplateLoader[] { extraLoader, defaultLoader };
 				MultiTemplateLoader multiLoader = new MultiTemplateLoader(loaders);
 				templateCfg.setTemplateLoader(multiLoader);
@@ -143,9 +151,10 @@ public class JForumBaseServlet extends HttpServlet
 				templateCfg.setTemplateLoader(defaultLoader);
 			}
  
+			
 		 
 			//config.dir = ${application.path}/WEB-INF/config
-			// ModulesRepository.getModuleClass(ClassName);
+			//ModulesRepository.getModuleClass(ClassName);
 			ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 
 			this.loadConfigStuff();
@@ -153,7 +162,6 @@ public class JForumBaseServlet extends HttpServlet
 			if (!this.debug) {
 				templateCfg.setTemplateUpdateDelay(3600);
 			}
-
 			JForumExecutionContext.setTemplateConfig(templateCfg);
 		}
 		catch (Exception e) {
@@ -169,8 +177,7 @@ public class JForumBaseServlet extends HttpServlet
 		I18n.load();
 		//加载htm模板
 		Tpl.load(SystemGlobals.getValue(ConfigKeys.TEMPLATES_MAPPING));
-
-		// BB Code 
+		// BB Code
 		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
 	}
 }

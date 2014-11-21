@@ -42,6 +42,7 @@
  */
 package net.jforum;
 
+import java.awt.SystemColor;
 import java.io.IOException;
 
 import net.jforum.context.RequestContext;
@@ -138,9 +139,9 @@ public abstract class Command
 		}
 
         try {
-            return JForumExecutionContext.templateConfig().getTemplate(
-                new StringBuffer(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)).
-                append('/').append(this.templateName).toString());
+        	String template=new StringBuffer(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)).
+                    append('/').append(this.templateName).toString();
+            return JForumExecutionContext.templateConfig().getTemplate(template);
         }
         catch (IOException e) {
             throw new ForumException( e);

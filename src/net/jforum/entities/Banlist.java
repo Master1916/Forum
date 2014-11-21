@@ -121,7 +121,7 @@ public class Banlist implements Serializable
 	{
 		this.email = email;
 	}
-	
+	//匹配原则如果id或是email相同那么视为相同
 	public boolean matches(Banlist b)
 	{
 		boolean status = false;
@@ -129,7 +129,8 @@ public class Banlist implements Serializable
 		if (this.matchesUserId(b) || this.matchesEmail(b)) {
 			status = true;
 		}
-		else if (!StringUtils.isEmpty(b.getIp()) && !StringUtils.isEmpty(this.getIp()))  {
+		else if (!StringUtils.isEmpty(b.getIp()) && ! StringUtils.isEmpty(this.getIp()))  {
+			
 			if (b.getIp().equalsIgnoreCase(this.getIp())) {
 				status = true;
 			}

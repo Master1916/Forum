@@ -51,7 +51,7 @@ public class ClickstreamFilter implements Filter
 			if (bot != null && log.isDebugEnabled()) {
 				log.debug("Found a bot: " + bot);
 			}
-			
+			//如果bot不等于空  is_bot=true
 			request.setAttribute(ConfigKeys.IS_BOT, Boolean.valueOf(bot != null));
 		}
 		

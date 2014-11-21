@@ -58,10 +58,6 @@ import org.apache.log4j.Logger;
  * 组合了一个map类 存放action的  名字和类    的映射
  */
 public class ModulesRepository
-
-
-
-
 {
 	private static final Logger logger = Logger.getLogger(ModulesRepository.class);
 	

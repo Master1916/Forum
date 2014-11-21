@@ -59,7 +59,7 @@ import org.apache.log4j.Logger;
  * @author Rafael Steil
  * @version $Id: DBConnection.java,v 1.14 2006/08/23 02:24:06 rafaelsteil Exp $
  */
-public abstract class DBConnection 
+public abstract class DBConnection
 {
 	private static final Logger logger = Logger.getLogger(DBConnection.class);
 	protected boolean isDatabaseUp;

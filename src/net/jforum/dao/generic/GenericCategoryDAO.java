@@ -90,6 +90,7 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	}
 
 	/**
+	 * 返回论坛的主题的种类
 	 * @see net.jforum.dao.CategoryDAO#selectAll()
 	 */
 	public List selectAll()
