@@ -156,7 +156,7 @@ public class JForumExecutionContext
 	}
 
 	/**
-	 * @param validate 判断是否存在comm 如果true 表示没有comm需要在获得 如果 false则表示存在程序直接返回
+	 * @param validate 判断是否存在conn 如果true 表示没有conn需要在获得 如果 false则表示存在程序直接返回
 	 * @return 
 	 */
 	public static Connection getConnection(boolean validate)

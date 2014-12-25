@@ -78,7 +78,7 @@ public class RecentTopicsAction extends Command
 	public void list()
 	{
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
-
+		 
 		this.setTemplateName(TemplateKeys.RECENT_LIST);
 		
 		this.context.put("postsPerPage", new Integer(postsPerPage));
@@ -99,7 +99,7 @@ public class RecentTopicsAction extends Command
 
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
-			
+			//判断这个用户是否可以访问这个版块
 			if (TopicsCommon.isTopicAccessible(t.getForumId())) {
 				Forum f = ForumRepository.getForum(t.getForumId());
 				forums.add(f);

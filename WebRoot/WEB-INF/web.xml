@@ -7,6 +7,10 @@
     <display-name>JForum - Powering Communities</display-name>
     <description>Open Source Java Forum Software</description>
 
+
+     <listener>
+		<listener-class>freemarker.ext.jsp.EventForwarding</listener-class>
+	</listener>
 	<!-- Clickstream -->
 	<filter>
 		<filter-name>clickstream-jforum</filter-name>
@@ -17,7 +21,6 @@
 		<filter-name>clickstream-jforum</filter-name>
 		<url-pattern>*.page</url-pattern>
 	</filter-mapping>
-    
     
     
     <listener>
@@ -89,4 +92,6 @@
       <realm-name>REALM NAME HERE</realm-name>
    </login-config>
    -->
+    
+	   
 </web-app>

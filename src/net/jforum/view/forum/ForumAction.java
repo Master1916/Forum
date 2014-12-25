@@ -43,9 +43,11 @@
 package net.jforum.view.forum;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,9 +59,12 @@ import net.jforum.dao.ForumDAO;
 import net.jforum.dao.ModerationDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
+import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
+import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.repository.TopicRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
@@ -77,16 +82,17 @@ import net.jforum.view.forum.common.ViewCommon;
  */
 public class ForumAction extends Command
 {
+	 
+	List forums;
 	/**
 	 * List all the forums (first page of forum index)?
 	 */
 	public void list()
 	{
+		//设置模板
 		this.setTemplateName(TemplateKeys.FORUMS_LIST);
 		//根据用户获得所有的分类
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(true));
-		
-		
 		
 		this.context.put("topicsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
@@ -154,7 +160,90 @@ public class ForumAction extends Command
 		}
 
 		this.context.put("mostUsersEverOnline", mostUsersEverOnline);
+		
+		
+		
+		///////在首页添加recentTopics
+		
+		 
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+		this.context.put("postsPerPage", new Integer(postsPerPage));
+		this.context.put("recenttopics", this.recentTopics());
+		this.context.put("forums", this.forums);
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.recentTopics"));
+
+		TopicsCommon.topicListingBase();
+		//this.request.setAttribute("template", null);
+		
+		
+		//在首页添加hot topic
+		 
+		
+		this.context.put("postsPerPage", new Integer(postsPerPage));
+		this.context.put("hottopics", this.HotTopics());
+		this.context.put("forums", this.forums);
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.hottestTopics"));
+
+		TopicsCommon.topicListingBase();
+		//this.request.setAttribute("template", null);
+		//
+		
+		
+		
 	}
+	
+	
+	
+	private List recentTopics()
+	{
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
+		List topics = TopicRepository.getRecentTopics();
+		
+		this.forums = new ArrayList(postsPerPage);
+
+		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
+			Topic t = (Topic)iter.next();
+			//判断这个用户是否可以访问这个版块
+			if (TopicsCommon.isTopicAccessible(t.getForumId())) {
+				Forum f = ForumRepository.getForum(t.getForumId());
+				forums.add(f);
+			}
+			else {
+				iter.remove();
+			}
+		}
+		
+		///JForumExecutionContext.getRequest().removeAttribute("template");
+		
+		return TopicsCommon.prepareTopics(topics);
+	}
+	
+	private List HotTopics()
+	{
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
+		List tmpTopics = TopicRepository.getHottestTopics();
+		
+		this.forums = new ArrayList(postsPerPage);
+
+		for (Iterator iter = tmpTopics.iterator(); iter.hasNext(); ) {
+			Topic t = (Topic)iter.next();
+			
+			if (TopicsCommon.isTopicAccessible(t.getForumId())) {
+				// Get name of forum that the topic refers to
+				Forum f = ForumRepository.getForum(t.getForumId());
+				forums.add(f);
+			}
+			else {
+				iter.remove();
+			}
+		}
+		
+		//JForumExecutionContext.getRequest().removeAttribute("template");
+		
+		return TopicsCommon.prepareTopics(tmpTopics);
+	}
+	
+	
 
 	public void moderation()
 	{
@@ -202,8 +291,8 @@ public class ForumAction extends Command
 
 		this.context.put("topicsToApprove", topicsToApprove);
 
-		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED,
-		        Integer.toString(forumId))
+		this.context.put("attachmentsEnabled",
+				SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(forumId))
 		        || SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 
 		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));

@@ -16,12 +16,11 @@
 		
 	</appender>
 	 
- 
 	<appender name="jforum.log" class="org.apache.log4j.RollingFileAppender">
 		<param name="MaxFileSize"  value="1024KB"/>
 		<param name="MaxBackupIndex" value="4"/>
 
-		<param name="File" value="/tmp/jforum1.log"/>
+		<param name="File" value="E:/tmp/jforum1.log"/>
 		
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d %-5p [%-c{1}] - %m%n"/>

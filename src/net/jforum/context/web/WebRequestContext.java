@@ -92,11 +92,11 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		this.query = new HashMap();
 		//判断是否有附件
 		boolean isMultipart = false;
-		
+		//get or post
 		String requestType = superRequest.getMethod().toUpperCase();
 		///   /Jforum2.1.9
 		String contextPath = superRequest.getContextPath();
-		
+		// 请求uri //
 		String requestUri = this.extractRequestUri(superRequest.getRequestURI(), contextPath);
 		
 		
@@ -302,6 +302,7 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 			: (String[])l.toArray(new String[0]);
 	}
 	
+	//
 	private String extractRequestUri(String requestUri, String contextPath)
 	{
 		// First, remove the context path from the requestUri, 

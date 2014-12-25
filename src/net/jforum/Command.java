@@ -49,6 +49,7 @@ import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.exceptions.ForumException;
 import net.jforum.exceptions.TemplateNotFoundException;
+import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.Tpl;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -112,7 +113,9 @@ public abstract class Command
 
 		if (!this.ignoreAction) {
 			try {
+			 
 				this.getClass().getMethod(action, NO_ARGS_CLASS).invoke(this, NO_ARGS_OBJECT);
+				
 			}
 			catch (NoSuchMethodException e) {		
 				this.list();		

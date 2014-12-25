@@ -71,6 +71,7 @@ import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.ext.jsp.TaglibFactory;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
@@ -110,7 +111,6 @@ public class JForum extends JForumBaseServlet
 		 
 			// Init general forum stuff
 			ForumStartup.startForumRepository();
-			
 			RankingRepository.loadRanks();
 			//加载表情符号
 			SmiliesRepository.loadSmilies();
@@ -146,18 +146,17 @@ public class JForum extends JForumBaseServlet
             response = new WebResponseContext(res);
             //检查数据连接
 			this.checkDatabaseStatus();
-               //  getContextPath()=/jforum
+            //getContextPath()=/jforum
             forumContext = new JForumContext(request.getContextPath(),
                 SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
                 request,
                 response
             );
             ex.setForumContext(forumContext);
-
             //设置JForumExecutionContext 为 localThread 
             JForumExecutionContext.set(ex);
 
-			// Setup stuff
+			// get simpleHash
 			SimpleHash context = JForumExecutionContext.getTemplateContext();
 			
 			ControllerUtils utils = new ControllerUtils();
@@ -168,7 +167,7 @@ public class JForum extends JForumBaseServlet
 			
 			// Process security data  ？？
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
-			//为模板准备数据
+			//为首页准备数据
 			utils.prepareTemplateContext(context, forumContext);
 
 			String module = request.getModule();
@@ -202,6 +201,7 @@ public class JForum extends JForumBaseServlet
 				}else {
 					context.put("language", I18n.getUserLanguage());
 					context.put("session", SessionFacade.getUserSession());
+					context.put("JspTaglibs", new TaglibFactory(getServletContext()));
 					context.put("request", req);
 					context.put("response", response);
 					out = this.processCommand(out, request, response, encoding, context, moduleClass);
@@ -224,7 +224,7 @@ public class JForum extends JForumBaseServlet
 		//根据这个类的名称通过反射获得这个类的一个实例
 		Command c = this.retrieveCommand(moduleClass);
 		Template template = c.process(request, response, context);
-
+		System.out.println("templateName==="+template.getName());
 		if (JForumExecutionContext.getRedirectTo() == null) {
 			String contentType = JForumExecutionContext.getContentType();
 			
