@@ -1,4 +1,4 @@
-* {margin:0;padding:0;}
+/* * {margin:0;padding:0;} */
 
 img { border: 0px; }
 font, th, td, p { font-family: verdana, arial, helvetica, sans-serif; }
@@ -66,6 +66,7 @@ th.thcornerr { border-top-width: 1px; border-left-width: 0px; border-bottom-widt
 
 .gen, .poll { font-size: 12px }
 .genmed, .name { font-size: 11px; }
+.genmed{float: left;}
 .gensmall, .postdetails { font-size: 10px; }
 .strong { font-weight: bold; }
 

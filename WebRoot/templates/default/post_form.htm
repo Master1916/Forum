@@ -38,12 +38,12 @@ function validatePostForm(f)
 	}
 	</#if>
 	
-	if (f.message.value.replace(/^\s*|\s*$/g, "").length == 0) {
+	/* if (f.message.value.replace(/^\s*|\s*$/g, "").length == 0) {
 		alert("${I18n.getMessage("PostForm.textEmpty")}");
 		f.message.focus();
 		
 		return false;
-	}
+	} */
 
 	<#if !forum?exists>
 	if (f.toUsername.value == "") {
@@ -352,7 +352,17 @@ function smiliePopup()
 								<!-- Textarea -->
 								<tr>
 									<td valign="top">
-										<textarea class="message" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" tabindex="3" name="message" rows="15"  cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></textarea> 
+										<textarea id="ckmessage" class="message" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" tabindex="3" name="message" rows="15"  cols="35">
+										
+											<#if post?exists>
+														<#if quote?exists>
+														   [quote=${quoteUser}]${post.text?html}[/quote]
+														<#else>
+													       ${post.text?html}
+												</#if>
+											</#if>
+										
+										</textarea> 
 									</td>
 								</tr>
 							</table>
@@ -466,6 +476,7 @@ function smiliePopup()
 </table>
 
 <script type="text/javascript">
+CKEDITOR.replace( 'ckmessage' );
 <!--
 <#if attachments?exists>
 	ignoreStart = true;
